@@ -37,7 +37,7 @@ jobs:
       uses: r0adkll/sign-android-release@v1
       id: sign_app
       env:
-        BUILD_TOOLS_VERION: "36.0.0"
+              BUILD_TOOLS_VERSION: "36.0.0"
       with:
         releaseDirectory: app/build/outputs/apk/release
         signingKeyBase64: ${{ secrets.SIGNING_KEY_BASE64 }}
