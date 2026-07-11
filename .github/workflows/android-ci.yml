@@ -36,11 +36,12 @@ jobs:
     - name: Sign Release APK
       uses: r0adkll/sign-android-release@v1
       id: sign_app
+      env:
+        BUILD_TOOLS_VERION: "36.0.0"
       with:
         releaseDirectory: app/build/outputs/apk/release
         signingKeyBase64: ${{ secrets.SIGNING_KEY_BASE64 }}
         alias: ${{ secrets.KEY_ALIAS }}
-        singlePop: true
         keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
         keyPassword: ${{ secrets.KEY_PASSWORD }}
 
@@ -50,4 +51,3 @@ jobs:
         name: android-release-apk
         path: ${{ steps.sign_app.outputs.signedReleaseFile }}
         retention-days: 7
-
