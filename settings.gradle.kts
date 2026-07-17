@@ -1,8 +1,3 @@
-/*
- * Root settings file. Updated to add the repositories AGP needs
- * (Google's Maven repo for the Android Gradle plugin + AndroidX artifacts).
- */
-
 pluginManagement {
     repositories {
         google()
@@ -12,11 +7,12 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
     }
 }
 
-rootProject.name = "test"
-include("app")
+rootProject.name = "CIAN"
+include(":app")

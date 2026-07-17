@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CIAN</string>
+    <color name="background_dark">#0B0D12</color>
 </resources>
