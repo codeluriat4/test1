@@ -1,0 +1,53 @@
+name: Fail-Fast Verification Pipeline
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+# Cancel any running builds on the same branch/PR if a new commit is pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Build & Verify
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin' # High-performance, reliable OpenJDK distribution
+          java-version: '21'
+
+      - name: Setup Android SDK (API 37)
+        uses: android-actions/setup-android@v4
+        with:
+          # Pre-fetches API 37 platforms & tools to prevent Gradle from downloading them dynamically
+          packages: 'platform-tools platforms;android-37 build-tools;37.0.0'
+
+      # Automatically manages caching for Gradle 9.4.1 dependencies to accelerate subsequent builds
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Grant Execute Permission to Gradlew
+        run: chmod +x gradlew
+
+      # Stage 1: Fast Compilation (Catches syntax & type errors immediately)
+      - name: Compile Project
+        run: ./gradlew compileDebugSources --no-daemon
+
+      # Stage 2: Static Analysis (Ensures styling & lint rules are checked before tests)
+      - name: Run Android Lint
+        run: ./gradlew lintDebug --no-daemon
+
+      # Stage 3: Fail-Fast Unit Testing
+      # Passing the '--fail-fast' flag tells Gradle to stop the run on the first test failure
+      - name: Run Unit Tests
+        run: ./gradlew testDebugUnitTest --fail-fast --no-daemon
