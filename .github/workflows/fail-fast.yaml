@@ -27,7 +27,7 @@ jobs:
           java-version: '21'
 
       - name: Setup Android SDK (API 37)
-        uses: android-actions/setup-android@v5
+        uses: android-actions/setup-android@v4
         with:
           # Pre-fetches API 37 platforms & tools to prevent Gradle from downloading them dynamically
           packages: 'platform-tools platforms;android-37 build-tools;37.0.0'
